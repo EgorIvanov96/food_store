@@ -18,4 +18,9 @@ router.register(r'carts', CartViewSet, basename='carts')
 urlpatterns = [
     path('', include(router.urls)),
     path('auth/', include('djoser.urls.authtoken')),
+    path(
+        'carts/<int:cart_id>/items/<int:item_id>/',
+        CartViewSet.as_view({'delete': 'destroy'}),
+        name='cart-item-delete'
+        )
 ]
