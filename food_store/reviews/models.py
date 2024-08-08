@@ -58,7 +58,7 @@ class Products(models.Model):
         Directory,
         on_delete=models.CASCADE,
         verbose_name='Каталог',
-        help_text='Выберите каталог'
+        help_text='Выберите каталог',
         # related_name='name_catalogs'
     )
     name_category = models.ForeignKey(
