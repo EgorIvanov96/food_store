@@ -1,5 +1,7 @@
 from django.db import models
 
+from users.models import User
+
 
 class Directory(models.Model):
     """Класс для каталогов."""
@@ -96,3 +98,47 @@ class Products(models.Model):
 
     def __str__(self):
         return self.name_product
+
+
+class Cart(models.Model):
+    """Корзина для пользователей."""
+    user = models.OneToOneField(
+        User,
+        on_delete=models.CASCADE,
+        verbose_name='Пользователь',
+        related_name='cart')
+
+    class Meta:
+        verbose_name = 'Корзина'
+        verbose_name_plural = 'Корзины'
+
+    def __str__(self):
+        return f'Корзина пользователя: {self.user.username}'
+
+
+class CartItem(models.Model):
+    """Элемент корзины."""
+    cart = models.ForeignKey(
+        Cart,
+        on_delete=models.CASCADE,
+        verbose_name='Корзина',
+        related_name='items')
+    product = models.ForeignKey(
+        Products,
+        on_delete=models.CASCADE,
+        verbose_name='Продукт',
+        help_text='Выберите продукт')
+    quantity = models.PositiveIntegerField(
+        default=1,
+        verbose_name='Количество',
+        help_text='Укажите количество товара')
+
+    class Meta:
+        verbose_name = 'Элемент корзины'
+        verbose_name_plural = 'Элементы корзины'
+
+    def total_price(self):
+        return self.quantity * self.product.price
+
+    def __str__(self):
+        return f'{self.product.name_product} в корзине {self.cart.user.username}'
